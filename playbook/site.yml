@@ -7,6 +7,12 @@
       ansible.builtin.service:
         name: clickhouse-server
         state: restarted
+    - name: Start vector service
+      become: true
+      ansible.builtin.service:
+        name: vector
+        state: restarted
+
   tasks:
     - block:
         - name: Get clickhouse distrib
@@ -22,6 +28,7 @@
     - name: Install clickhouse packages
       become: true
       ansible.builtin.yum:
+        disable_gpg_check: true
         name:
           - clickhouse-common-static-{{ clickhouse_version }}.rpm
           - clickhouse-client-{{ clickhouse_version }}.rpm
@@ -29,8 +36,25 @@
       notify: Start clickhouse service
     - name: Flush handlers
       meta: flush_handlers
+    - name: Drop database
+      ansible.builtin.command: "clickhouse-client -q 'drop database logs;'"      
     - name: Create database
       ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
       register: create_db
-      failed_when: create_db.rc != 0 and create_db.rc !=82
+      failed_when: create_db.rc != 0 and fycreate_db.rc !=82
       changed_when: create_db.rc == 0
+    - name: Get vector distrib
+      ansible.builtin.get_url:
+        url: https://setup.vector.dev
+        dest: "./repo.sh"
+    - name: Install vector repo
+      become: true
+      ansible.builtin.command: /bin/bash ./repo.sh
+        
+    - name: Install vector
+      become: true
+      ansible.builtin.yum: 
+        name:
+          - vector
+      notify: Start vector service
+            
