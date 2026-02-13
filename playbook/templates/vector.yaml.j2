@@ -1,0 +1,16 @@
+sources:
+  auth_logs:
+    type: file
+    include: 
+      - /var/log/auth.log
+    read_from: end
+sinks:
+  clickhouse:
+    type: clickhouse
+    inputs: 
+      - auth_logs
+    endpoint: "http://{{ inventory_hostname }}:8123"
+    database: "logs"
+    table: "auth_logs"
+    skip_unknown_fields: true
+
