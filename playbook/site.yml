@@ -6,11 +6,13 @@
       become: true
       ansible.builtin.service:
         name: clickhouse-server
+        enabled: true
         state: restarted
     - name: Start vector service
       become: true
       ansible.builtin.service:
         name: vector
+        enabled: true
         state: restarted
 
   tasks:
@@ -57,4 +59,13 @@
         name:
           - vector
       notify: Start vector service
-            
+    - name: Create vector config dir
+      become: true
+      ansible.builtin.file:
+        state: directory
+        owner: vector
+        group: vector
+        mode: 750
+        path: /etc/vector
+        
+              
