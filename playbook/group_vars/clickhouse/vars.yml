@@ -4,3 +4,6 @@ clickhouse_packages:
   - clickhouse-client
   - clickhouse-server
   - clickhouse-common-static
+database: "logs"
+table: "auth_logs"
+

@@ -9,8 +9,8 @@ sinks:
     type: clickhouse
     inputs: 
       - auth_logs
-    endpoint: "http://{{ inventory_hostname }}:8123"
-    database: "logs"
-    table: "auth_logs"
+    endpoint: "http://localhost:8123"
+    database: "{{ database }}"
+    table: "{{ table }}"
     skip_unknown_fields: true
 

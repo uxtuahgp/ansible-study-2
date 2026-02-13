@@ -36,19 +36,30 @@
           - clickhouse-client-{{ clickhouse_version }}.rpm
           - clickhouse-server-{{ clickhouse_version }}.rpm
       notify: Start clickhouse service
+
     - name: Flush handlers
       meta: flush_handlers
+    
+#    - name: Is database exists
+#      ansible.builtin.command: "clickhouse-client -q 'show databases'|grep {{ database }}"
+#      register: db_name
+            
     - name: Drop database
-      ansible.builtin.command: "clickhouse-client -q 'drop database logs;'"      
+      ansible.builtin.command: "clickhouse-client -q 'drop database logs;'"
+      ignore_errors: true
+
     - name: Create database
       ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
       register: create_db
       failed_when: create_db.rc != 0 and fycreate_db.rc !=82
       changed_when: create_db.rc == 0
+#      when: db_name is empty
+
     - name: Get vector distrib
       ansible.builtin.get_url:
         url: https://setup.vector.dev
         dest: "./repo.sh"
+
     - name: Install vector repo
       become: true
       ansible.builtin.command: /bin/bash ./repo.sh
@@ -59,6 +70,7 @@
         name:
           - vector
       notify: Start vector service
+
     - name: Create vector config dir
       become: true
       ansible.builtin.file:
@@ -67,5 +79,13 @@
         group: vector
         mode: 750
         path: /etc/vector
+
+    - name: Make config for vector
+      become: true
+      template:
+        src="templates/vector.yaml.j2"
+        dest="/etc/vector/vector.yaml"     
+    
+          
         
               
