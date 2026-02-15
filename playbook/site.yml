@@ -6,13 +6,11 @@
       become: true
       ansible.builtin.service:
         name: clickhouse-server
-        enabled: true
         state: restarted
     - name: Start vector service
       become: true
       ansible.builtin.service:
         name: vector
-        enabled: true
         state: restarted
 
   tasks:
@@ -39,11 +37,17 @@
 
     - name: Flush handlers
       meta: flush_handlers
-    
-#    - name: Is database exists
-#      ansible.builtin.command: "clickhouse-client -q 'show databases'|grep {{ database }}"
-#      register: db_name
-            
+
+    - name: Enable clickhouse service
+      become: true
+      ansible.builtin.service:
+        name: clickhouse-server
+        enabled: true
+      
+#    - name: Get databases
+#      ansible.builtin.shell: clickhouse-client -q 'show databases' |grep {{ database }}
+#      register: process_status
+      
     - name: Drop database
       ansible.builtin.command: "clickhouse-client -q 'drop database logs;'"
       ignore_errors: true
@@ -53,7 +57,7 @@
       register: create_db
       failed_when: create_db.rc != 0 and fycreate_db.rc !=82
       changed_when: create_db.rc == 0
-#      when: db_name is empty
+#      when: process_status.rc != 0
 
     - name: Get vector distrib
       ansible.builtin.get_url:
@@ -86,6 +90,11 @@
         src="templates/vector.yaml.j2"
         dest="/etc/vector/vector.yaml"     
     
+    - name: Enable vector service
+      become: true
+      ansible.builtin.service:
+        name: vector
+        enabled: true
           
         
               
