@@ -1,4 +1,4 @@
-## Ansible homework 2 ##  
+## Ansible homework 3 ##  
 ### Pre task ###  
 Created 3 VMs with Fedora 37 OS managed with fedora username using ssh key  
 Stored public VM IP in /etc/hosts  
