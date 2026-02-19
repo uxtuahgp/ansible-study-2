@@ -1,0 +1,17 @@
+---
+clickhouse:
+  hosts:
+    clickhouse-01:
+      ansible_host: clickhouse-01
+      ansible_user: fedora
+vector:
+  hosts:
+    vector:
+      ansible_host: vector-01
+      ansible_user: fedora
+lighthouse:
+  hosts:
+    lighthouse:
+      ansible_host: lighthouse-01
+      ansible_user: fedora
+

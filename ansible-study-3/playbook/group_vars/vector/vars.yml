@@ -1,0 +1,7 @@
+---
+vector_config_path: /etc/vector/vector.yaml
+vector_version: "0.29.1"
+clickhouse_dbname: logs
+clickhouse_user: vectneto
+clickhouse_password: vectneto
+clickhouse_tablename: logs_table
