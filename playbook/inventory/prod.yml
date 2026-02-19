@@ -4,3 +4,14 @@ clickhouse:
     clickhouse-01:
       ansible_host: ch-01
       ansible_user: core
+vector:
+  hosts:
+    vector:
+      ansible_host: vr-01
+      ansible_user: core
+lighthouse:
+  hosts:
+    vector:
+      ansible_host: lh-01
+      ansible_user: core
+

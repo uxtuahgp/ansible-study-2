@@ -48,9 +48,9 @@
 #      ansible.builtin.shell: clickhouse-client -q 'show databases' |grep {{ database }}
 #      register: process_status
       
-    - name: Drop database
-      ansible.builtin.command: "clickhouse-client -q 'drop database logs;'"
-      ignore_errors: true
+#    - name: Drop database
+#      ansible.builtin.command: "clickhouse-client -q 'drop database logs;'"
+#      ignore_errors: true
 
     - name: Create database
       ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
